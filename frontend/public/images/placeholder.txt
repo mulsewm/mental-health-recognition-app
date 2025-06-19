@@ -1,0 +1,7 @@
+Placeholder for emotion detection sample images. In a real application, you would have:
+- happy-demo.jpg
+- neutral-demo.jpg
+- surprise-demo.jpg
+- sad-demo.jpg
+
+These images should show clear examples of the corresponding facial expressions.

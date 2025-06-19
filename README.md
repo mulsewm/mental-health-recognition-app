@@ -1,8 +1,4 @@
-# Mental Health Recognition App
-
-**Thesis Project – “Predicting Mental Health Risks in Remote Workers Using Image-Based Machine Learning Models”**
-
-This full-stack web application provides an interactive dashboard for real-time facial emotion recognition.  It supports academic research by capturing, analysing, and exporting emotion data from remote workers’ facial expressions so that it can be correlated with psychological survey scores (PHQ-9, PSS-10, etc.).
+# Facial Emotion Recognition for Mental Health Risk Prediction
 
 A full-stack web application for real-time facial emotion recognition using deep learning, designed to support mental health research.
 
@@ -14,14 +10,6 @@ A full-stack web application for real-time facial emotion recognition using deep
 - Interactive emotion timeline visualization
 - Data export functionality (CSV)
 - Responsive and modern UI
-
-## Demo
-
-### Analyze Media Page
-![Analyze Media](docs/screenshots/analyze-page.png)
-
-### Live Webcam Detection
-![Live Webcam](docs/screenshots/live-webcam.png)
 
 ## Tech Stack
 

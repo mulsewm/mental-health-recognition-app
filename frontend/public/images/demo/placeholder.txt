@@ -1,0 +1,5 @@
+Placeholder for demo screenshot
+
+Please replace this file with an actual screenshot of the application in action.
+Recommended size: 1200x800px
+Formats: .png or .jpg
