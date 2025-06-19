@@ -19,13 +19,6 @@ error_exit() {
     exit 1
 }
 
-# Check if required commands are available
-for cmd in python pip; do
-    if ! command -v $cmd &> /dev/null; then
-        error_exit "$cmd is required but not installed."
-    fi
-done
-
 # Print environment information
 log "=== Starting Application ==="
 log "Working directory: $(pwd)"
@@ -48,17 +41,27 @@ fi
 
 # Check for Python dependencies
 REQUIRED_PACKAGES=("fastapi" "uvicorn" "torch" "torchvision" "opencv-python-headless" "numpy")
+MISSING_PKGS=()
 for pkg in "${REQUIRED_PACKAGES[@]}"; do
     if ! python -c "import ${pkg%%[<=>]*}" &>/dev/null; then
-        error_exit "Required Python package $pkg is not installed."
+        MISSING_PKGS+=("$pkg")
     fi
 done
+
+# Install missing packages if any
+if [ ${#MISSING_PKGS[@]} -ne 0 ]; then
+    log "Installing missing packages: ${MISSING_PKGS[*]}"
+    pip install --no-cache-dir "${MISSING_PKGS[@]}" || error_exit "Failed to install required packages"
+fi
+
+# Ensure we're in the correct directory
+cd /app
 
 # Start the FastAPI server
 log "Starting FastAPI server on port $PORT"
 log "Command: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1"
 
-exec uvicorn app.main:app \
+exec python -m uvicorn app.main:app \
     --host 0.0.0.0 \
     --port "$PORT" \
     --workers 1 \

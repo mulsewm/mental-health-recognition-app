@@ -28,6 +28,13 @@ python-slugify==8.0.4
 
 gunicorn==21.2.0
 
+# Explicitly exclude Jupyter and its dependencies
+jupyter==0.0.0  # Explicitly exclude jupyter
+notebook==0.0.0  # Explicitly exclude notebook
+jupyter-client==0.0.0  # Explicitly exclude jupyter-client
+jupyter-core==0.0.0  # Explicitly exclude jupyter-core
+ipykernel==0.0.0  # Explicitly exclude ipykernel
+
 # Development
 typing-extensions==4.11.0
 mypy==1.9.0
