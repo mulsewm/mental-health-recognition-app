@@ -1,0 +1,21 @@
+[build]
+builder = "DOCKER"
+
+[deploy]
+startCommand = "./start.sh"
+restartPolicyType = "on-failure"
+restartPolicyMaxRetries = 5
+
+[build.dockerfile]
+path = "backend/Dockerfile"
+
+[build.environment]
+PYTHONUNBUFFERED = "1"
+PYTHONPATH = "/app"
+PYTHONDONTWRITEBYTECODE = "1"
+
+[build.args]
+PYTHON_VERSION = "3.9-slim"
+
+[build.prebuild.apt]
+packages = ["build-essential", "libopenblas-base", "libgomp1"]

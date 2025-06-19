@@ -1,0 +1,39 @@
+[build]
+builder = "DOCKER"
+
+[deploy]
+startCommand = "./start.sh"
+restartPolicyType = "on-failure"
+restartPolicyMaxRetries = 5
+
+[build.dockerfile]
+path = "Dockerfile"
+
+[build.environment]
+PYTHONUNBUFFERED = "1"
+PYTHONPATH = "/app"
+PYTHONDONTWRITEBYTECODE = "1"
+
+[build.args]
+# Optimize for size
+PYTHON_VERSION = "3.9-slim"
+
+[build.prebuild]
+# Install only essential build dependencies
+  [build.prebuild.apt]
+  packages = ["build-essential", "libopenblas-base", "libgomp1"]
+
+[build.install]
+# Use pip cache and no-cache-dir to reduce image size
+"python -m pip install --no-cache-dir --upgrade pip setuptools wheel" = ""
+"python -m pip install --no-cache-dir -r requirements.txt" = ""
+
+[build.build]
+# Explicitly copy only necessary files
+"cp -r app /tmp/app" = ""
+"cp requirements.txt /tmp/" = ""
+"cp start.sh /tmp/" = ""
+"chmod +x /tmp/start.sh" = ""
+
+[build.run]
+# Start the application with auto-reload in development"./start.sh" = ""

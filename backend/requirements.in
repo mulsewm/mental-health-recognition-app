@@ -1,0 +1,33 @@
+# Core
+fastapi
+uvicorn[standard]
+python-multipart
+python-dotenv
+
+# AI/ML
+torch
+torchvision
+opencv-python-headless
+numpy
+
+# Data Processing
+pandas
+python-dateutil
+
+# Web & API
+websockets
+python-jose[cryptography]
+passlib[bcrypt]
+
+# Utilities
+pydantic
+python-slugify
+
+gunicorn
+
+# Development
+typing-extensions
+mypy
+pytest
+pytest-asyncio
+httpx

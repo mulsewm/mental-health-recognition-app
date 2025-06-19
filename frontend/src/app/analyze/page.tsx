@@ -21,7 +21,9 @@ export default function AnalyzePage() {
   const [error, setError] = useState<string | null>(null);
   const [analysisResults, setAnalysisResults] = useState<AnalysisResult[]>([]);
   const [progress, setProgress] = useState(0);
-  const mediaRef = useRef<HTMLVideoElement | HTMLImageElement>(null);
+  // Use separate refs for video and image to avoid type issues
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameRef = useRef<number>();
   const videoDurationRef = useRef(0);
@@ -131,19 +133,19 @@ export default function AnalyzePage() {
 
   // Setup media element when file is selected
   useEffect(() => {
-    if (!selectedFile || !mediaRef.current) return;
+    if (!selectedFile) return;
 
     const url = URL.createObjectURL(selectedFile);
     
-    if (selectedFile.type.startsWith('video/')) {
-      const video = mediaRef.current as HTMLVideoElement;
-      video.src = url;
-      video.onloadedmetadata = () => {
-        videoDurationRef.current = video.duration;
+    if (selectedFile.type.startsWith('video/') && videoRef.current) {
+      videoRef.current.src = url;
+      videoRef.current.onloadedmetadata = () => {
+        if (videoRef.current) {
+          videoDurationRef.current = videoRef.current.duration;
+        }
       };
-    } else {
-      const img = mediaRef.current as HTMLImageElement;
-      img.src = url;
+    } else if (imageRef.current) {
+      imageRef.current.src = url;
     }
 
     return () => {
@@ -153,7 +155,7 @@ export default function AnalyzePage() {
 
   // Draw analysis results on canvas
   useEffect(() => {
-    if (!canvasRef.current || !mediaRef.current || analysisResults.length === 0) return;
+    if (!canvasRef.current || (!videoRef.current && !imageRef.current) || analysisResults.length === 0) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
@@ -165,10 +167,10 @@ export default function AnalyzePage() {
       
       // Draw the current frame from media
       if (selectedFile?.type.startsWith('video/')) {
-        const video = mediaRef.current as HTMLVideoElement;
+        const video = videoRef.current as HTMLVideoElement;
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       } else {
-        const img = mediaRef.current as HTMLImageElement;
+        const img = imageRef.current as HTMLImageElement;
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       }
 
@@ -232,6 +234,20 @@ export default function AnalyzePage() {
       }
     };
   }, [analysisResults, selectedFile]);
+
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      if (videoRef.current && videoRef.current.src) {
+        URL.revokeObjectURL(videoRef.current.src);
+      }
+      if (imageRef.current && imageRef.current.src) {
+        URL.revokeObjectURL(imageRef.current.src);
+      }
+    };
+  }, []);
 
   return (
     <AppLayout>
@@ -356,18 +372,14 @@ export default function AnalyzePage() {
                   <>
                     {selectedFile.type.startsWith('video/') ? (
                       <video
-                        ref={el => {
-                          if (el) mediaRef.current = el;
-                        }}
+                        ref={videoRef}
                         className="absolute inset-0 w-full h-full object-contain"
                         controls={!isAnalyzing}
                         muted
                       />
                     ) : (
                       <img
-                        ref={el => {
-                          if (el) mediaRef.current = el;
-                        }}
+                        ref={imageRef}
                         src=""
                         alt="Preview"
                         className="absolute inset-0 w-full h-full object-contain"

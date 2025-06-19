@@ -1,8 +1,11 @@
-import React, { useCallback, useState, useRef, ChangeEvent } from 'react';
+import React, { useCallback, useState, useRef, ChangeEvent, useEffect } from 'react';
 import { FiUpload, FiX } from 'react-icons/fi';
 
 interface FileUploadProps {
   onFileSelect: (file: File) => void;
+  onClear?: () => void;
+  selectedFile?: File | null;
+  isAnalyzing?: boolean;
   acceptedFormats?: string;
   maxSizeMB?: number;
   className?: string;
@@ -10,6 +13,9 @@ interface FileUploadProps {
 
 const FileUpload: React.FC<FileUploadProps> = ({
   onFileSelect,
+  onClear,
+  selectedFile = null,
+  isAnalyzing = false,
   acceptedFormats = 'video/*,image/*',
   maxSizeMB = 50,
   className = '',
@@ -17,6 +23,17 @@ const FileUpload: React.FC<FileUploadProps> = ({
   const [dragActive, setDragActive] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  
+  // Update preview when selectedFile changes
+  useEffect(() => {
+    if (selectedFile) {
+      const url = URL.createObjectURL(selectedFile);
+      setPreview(url);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setPreview(null);
+    }
+  }, [selectedFile]);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const validateFile = (file: File): boolean => {
@@ -84,6 +101,9 @@ const FileUpload: React.FC<FileUploadProps> = ({
     if (inputRef.current) {
       inputRef.current.value = '';
     }
+    if (onClear) {
+      onClear();
+    }
   };
 
   return (
@@ -112,33 +132,42 @@ const FileUpload: React.FC<FileUploadProps> = ({
           <div className="mx-auto w-12 h-12 flex items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400">
             <FiUpload className="w-6 h-6" />
           </div>
-          
-          <div className="space-y-1">
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              <span className="font-medium text-blue-600 dark:text-blue-400">Click to upload</span> or drag and drop
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              {acceptedFormats.includes('video') ? 'MP4, WebM, or MOV (max 50MB)' : 'PNG, JPG, or GIF (max 50MB)'}
-            </p>
+          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+            {isAnalyzing ? (
+              <div className="flex flex-col items-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mb-3"></div>
+                <p className="text-sm text-gray-500">Analyzing...</p>
+              </div>
+            ) : (
+              <>
+                <FiUpload className="w-8 h-8 mb-3 text-gray-400" />
+                <p className="mb-2 text-sm text-gray-500">
+                  <span className="font-semibold">Click to upload</span> or drag and drop
+                </p>
+                <p className="text-xs text-gray-500">
+                  {acceptedFormats} (max {maxSizeMB}MB)
+                </p>
+              </>
+            )}
           </div>
-          
           {preview && (
-            <div className="relative mt-4 max-w-xs mx-auto">
-              <div className="relative group">
-                <img 
-                  src={preview} 
-                  alt="Preview" 
-                  className="max-h-40 mx-auto rounded-md"
-                />
+            <div className="relative group mt-4">
+              <img
+                src={preview}
+                alt="Preview"
+                className="max-h-40 mx-auto rounded-md"
+              />
+              {!isAnalyzing && (
                 <button
                   type="button"
                   onClick={clearFile}
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
                   aria-label="Remove file"
+                  disabled={isAnalyzing}
                 >
                   <FiX className="w-4 h-4" />
                 </button>
-              </div>
+              )}
             </div>
           )}
         </div>
