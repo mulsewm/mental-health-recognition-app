@@ -1,0 +1,57 @@
+# Ignore everything
+*
+
+# Allow these files and directories
+!app/
+!requirements.txt
+!start.sh
+!Procfile
+!runtime.txt
+
+# Ignore specific files and directories
+**/__pycache__
+**/.pytest_cache
+**/*.pyc
+**/*.pyo
+**/*.pyd
+.Python
+env/
+venv/
+ENV/
+.env
+.venv
+.env.*
+!.env.example
+*.log
+*.sqlite3
+*.db
+*.sql
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-*
+.coverage
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Ignore model files if they're large
+*.pth
+*.pt
+*.h5
+*.hdf5
+*.pkl
+*.joblib
+*.bin
+*.onnx
+*.pb
+*.tflite
+*.tfl

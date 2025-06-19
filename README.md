@@ -1,6 +1,112 @@
-# Facial Emotion Recognition for Mental Health Risk Prediction
+# Mental Health Recognition App
 
-A full-stack web application for real-time facial emotion recognition using deep learning, designed to support mental health research.
+A full-stack web application for real-time facial emotion recognition using deep learning, designed to support mental health research. This application uses a Next.js frontend and FastAPI backend with PyTorch for emotion detection.
+
+## 🚀 Deployment with Railway
+
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=YOUR_RAILWAY_TEMPLATE_LINK)
+
+### Prerequisites
+- A GitHub account
+- A Railway account (free tier available)
+- Docker (for local testing, optional)
+
+### Deployment Steps
+
+1. **Fork this repository** to your GitHub account
+2. **Sign in to Railway** using your GitHub account
+3. **Create a new project** and select "Deploy from GitHub repo"
+4. **Select your forked repository** and the branch you want to deploy
+5. **Configure environment variables** (if any) in the Railway dashboard
+6. **Deploy!** Railway will automatically build and deploy your application
+
+### Environment Variables
+
+Create a `.env` file in the `backend` directory with the following variables:
+
+```env
+# Backend Configuration
+PORT=8000
+ENVIRONMENT=production
+
+# CORS (update with your frontend URL)
+FRONTEND_URL=https://your-frontend-url.railway.app
+
+# Security (generate these for production)
+SECRET_KEY=your-secret-key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+## 🏗️ Local Development
+
+### Backend Setup
+
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+
+2. Create and activate a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Start the FastAPI server:
+   ```bash
+   ./start.sh
+   ```
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## 🤖 Features
+
+- Real-time facial emotion detection from webcam or uploaded videos
+- Emotion prediction using a pre-trained EMO-AffectNet model
+- Facial landmark detection with Dlib
+- Interactive emotion timeline visualization
+- Data export functionality (CSV)
+- Responsive and modern UI
+
+## 🛠️ Tech Stack
+
+### Backend
+- Python 3.9+
+- FastAPI
+- PyTorch
+- OpenCV
+- Dlib
+- WebSockets
+
+### Frontend
+- Next.js 13
+- TypeScript
+- TailwindCSS
+- Chart.js
+- WebRTC
 
 ## Features
 
