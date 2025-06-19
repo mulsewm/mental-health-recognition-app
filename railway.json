@@ -1,17 +1,10 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
   "build": {
-    "builder": "DOCKER",
-    "dockerfile": "Dockerfile",
-    "buildCommand": "docker build -t mental-health-backend ."
+    "builder": "NIXPACKS",
+    "buildCommand": "pip install -r requirements.txt"
   },
   "deploy": {
-    "startCommand": "./start.sh",
-    "restartPolicyType": "ON_FAILURE",
-    "restartPolicyMaxRetries": 5
-  },
-  "checks": {
-    "enabled": true,
-    "timeout": 60
+    "startCommand": "./start.sh"
   }
 }
